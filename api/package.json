@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "the api layer for shop stack",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "start": "npx nodemon index.js"
+    "start": "npx nodemon src/index.js"
   },
   "author": "rhotate",
   "license": "GPL-3.0-or-later",
@@ -12,5 +13,8 @@
     "mysql": "^2.18.1",
     "nodemon": "^3.1.9",
     "stripe": "^17.6.0"
+  },
+  "imports": {
+    "#src/*.js": "./src/*.js"
   }
 }
