@@ -27,4 +27,7 @@ export const login = async (req, res) => {
 		'Content-Type': 'application/json',
 		'Set-Cookie': `authToken=${makeToken(username)}`,
 	})
+	res.end(JSON.stringify({
+		message: 'The user has been logged in.',
+	}))
 }

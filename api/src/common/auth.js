@@ -15,15 +15,15 @@ export const authenticate = (req, res) => {
 	const token = Object.fromEntries(
 		cookie.split(';').spit('=').trim()
 	)['authToken']
-	const [ payload, signature ] = token
+	const [ username, signature ] = token
 		.split('.')
 		.map(a => atob(a))
 	const expectedSig = crypto
 		.createHmac('sha256', process.env.SECRET)
-		.update(payload)
+		.update(username)
 		.digest('ascii')
 
-	if (signature == expectedSig) return
+	if (signature == expectedSig) return username
 
 	res.writeHead(400, {
 		'Content-Type': 'application/json',
