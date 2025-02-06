@@ -10,7 +10,8 @@
   "author": "rhotate",
   "license": "GPL-3.0-or-later",
   "dependencies": {
-    "mysql": "^2.18.1",
+    "mysql2": "^3.12.0",
+    "nodemailer": "^6.10.0",
     "nodemon": "^3.1.9",
     "stripe": "^17.6.0"
   },

@@ -19,7 +19,7 @@ const routes = {
 	'POST /checkout': checkout,
 }
 
-const server = http.createServer((req, res) => {
+const server = http.createServer(async (req, res) => {
 	const { method, url } = req
 	const routeKey = `${method} ${url}`
 	const routeHandler = routes[routeKey]
@@ -27,6 +27,7 @@ const server = http.createServer((req, res) => {
 	if (!routeHandler) {
 		res.writeHead(404, { 'Content-Type': 'application/json' })
 		res.end(JSON.stringify({ message: 'Not Found' }))
+		return;
 	}
 
 	let body = ''
@@ -35,9 +36,9 @@ const server = http.createServer((req, res) => {
 		body += chunk.toString()
 	})
 
-	req.on('end', () => {
+	req.on('end', async () => {
 		req.body = JSON.parse(body)
-		routeHandler(req, res)
+		await routeHandler(req, res)
 	})
 })
 

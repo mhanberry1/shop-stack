@@ -5,8 +5,14 @@ services:
     working_dir: /api
     entrypoint: npm start
     environment:
+      SECRET: $SECRET
       STRIPE_API_KEY: $STRIPE_API_KEY
       MYSQL_PASSWORD: $MYSQL_PASSWORD
+      MYSQL_USER: api_user
+      MYSQL_HOST: db
+      EMAIL: $EMAIL
+      EMAIL_PASSWORD: $EMAIL_PASSWORD
+      EMAIL_HOST: $EMAIL_HOST
     ports:
       - 8080:8080
     volumes:
@@ -21,8 +27,6 @@ services:
       MYSQL_DATABASE: shop_stack
       MYSQL_USER: api_user
       MYSQL_PASSWORD: $MYSQL_PASSWORD
-    ports:
-      - 3306:3306
     volumes:
       - data:/var/lib/mysql
       - ./db:/docker-entrypoint-initdb.d
