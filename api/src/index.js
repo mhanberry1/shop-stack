@@ -20,8 +20,10 @@ const routes = {
 }
 
 const server = http.createServer(async (req, res) => {
+	req.url = new URL(`http://${req.headers.host}${req.url}`)
+
 	const { method, url } = req
-	const routeKey = `${method} ${url}`
+	const routeKey = `${method} ${url.pathname}`
 	const routeHandler = routes[routeKey]
 
 	if (!routeHandler) {
@@ -37,11 +39,20 @@ const server = http.createServer(async (req, res) => {
 	})
 
 	req.on('end', async () => {
-		req.body = JSON.parse(body)
-		await routeHandler(req, res)
+		try {
+			req.body = JSON.parse(body || '{}')
+			await routeHandler(req, res)
+		} catch (e) {
+			console.error(e)
+
+			if (res.sent) return
+
+			res.writeHead(500, { 'Content-Type': 'application/json'})
+			res.end(JSON.stringify({ message: 'Internal Server Error.' }))
+		}
 	})
 })
 
-server.listen(8080, '127.0.0.1', () => {
+server.listen(8080, '0.0.0.0', () => {
 	console.log('Server running')
 })

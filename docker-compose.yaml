@@ -12,7 +12,7 @@ services:
       MYSQL_HOST: db
       EMAIL: $EMAIL
       EMAIL_PASSWORD: $EMAIL_PASSWORD
-      EMAIL_HOST: $EMAIL_HOST
+      EMAIL_SERVICE: $EMAIL_SERVICE
     ports:
       - 8080:8080
     volumes:

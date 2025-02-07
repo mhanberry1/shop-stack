@@ -6,4 +6,5 @@ export const logout = async(req, res) => {
 	res.end(JSON.stringify({
 		message: 'The user has been logged out.',
 	}))
+	res.sent = true
 }

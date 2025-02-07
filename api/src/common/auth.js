@@ -11,17 +11,18 @@ export const makeToken = username => {
 }
 
 export const authenticate = (req, res) => {
-	const cookie = req.headers['Cookie']
+	const cookie = req.headers['cookie']
 	const token = Object.fromEntries(
-		cookie.split(';').spit('=').trim()
+		cookie?.split(';').map(
+			e => e.trim().split(/=(.*)/s).slice(0,2)
+		)
 	)['authToken']
 	const [ username, signature ] = token
 		.split('.')
-		.map(a => atob(a))
 	const expectedSig = crypto
 		.createHmac('sha256', process.env.SECRET)
 		.update(username)
-		.digest('ascii')
+		.digest('base64')
 
 	if (signature == expectedSig) return username
 
@@ -31,6 +32,7 @@ export const authenticate = (req, res) => {
 	res.end(JSON.stringify({
 		message: 'The user could not be authenticated.',
 	}))
+	res.sent = true
 
 	const error = new Error('The user could not be authenticated.')
 	error.name = 'AuthenticationError'

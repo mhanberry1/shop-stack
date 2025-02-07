@@ -5,13 +5,16 @@ import { makeToken } from '#src/common/auth.js'
 export const login = async (req, res) => {
 	const { username, password } = req.body
 
+	let user
+
 	try {
-		const user = await getUser(username)
+		user = await getUser(username)
 	} catch (e) {
 		res.writeHead(400, { 'Content-Type': 'application/json' })
 		res.end(JSON.stringify({
 			message: 'There is no user with that username.',
 		}))
+		res.sent = true
 		return
 	}
 
@@ -20,6 +23,16 @@ export const login = async (req, res) => {
 		res.end(JSON.stringify({
 			message: 'Incorrect password.',
 		}))
+		res.sent = true
+		return
+	}
+
+	if (false && !user.isVerified) {
+		res.writeHead(401, { 'Content-Type': 'application/json' })
+		res.end(JSON.stringify({
+			message: 'This account has not been verified.',
+		}))
+		res.sent = true
 		return
 	}
 
@@ -30,4 +43,5 @@ export const login = async (req, res) => {
 	res.end(JSON.stringify({
 		message: 'The user has been logged in.',
 	}))
+	res.sent = true
 }

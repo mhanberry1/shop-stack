@@ -11,8 +11,8 @@ export const makeSaltHash = (text, salt = makeSalt()) => {
 	return `${salt}:${hash}`
 }
 
-export const verifySaltHash = (text, saltedHash) => {
-	const [salt, hash] = saltedHash.split(':')
-	
-	return hash == makeSaltHash(text, salt)
+export const verifySaltHash = (text, saltHash) => {
+	const salt = saltHash.split(':')[0]
+
+	return saltHash == makeSaltHash(text, salt)
 }

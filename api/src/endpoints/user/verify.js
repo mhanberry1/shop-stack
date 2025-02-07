@@ -10,10 +10,13 @@ export const verify = async (req, res) => {
 		res.end(JSON.stringify({
 			message: 'The user could not be verified.',
 		}))
+		res.sent = true
+		return
 	}
 
 	res.writeHead(200, { 'Content-Type': 'application/json' })
 	res.end(JSON.stringify({
 		message: 'The user has been verified.',
 	}))
+	res.sent = true
 }

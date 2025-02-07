@@ -4,28 +4,26 @@ const connect = () => mysql.createConnection({
 	host: process.env.MYSQL_HOST,
 	user: process.env.MYSQL_USER,
 	password: process.env.MYSQL_PASSWORD,
+	database: 'shop_stack',
 })
 
 // User operations
 
-export const addUser = async (id, username, password) => {
-	const connection = connect()
+export const addUser = async (stripeCustomerId, username, password) => {
+	const connection = await connect()
 
 	await connection.query(
 		`
-			START TRANSACTION;
-			SET @isFirstUser = (SELECT COUNT(*) = 0 FROM users);
-			INSERT INTO users (id user, password, isAdmin)
-				VALUES (?, ?, ?, @isFirstUser);
-			COMMIT;
+			INSERT INTO users (stripeCustomerId, username, password, isAdmin)
+				SELECT ?, ?, ?, (SELECT COUNT(*) FROM users) = 0;
 		`,
-		[username, password],
+		[stripeCustomerId, username, password],
 	)
 	await connection.end()
 }
 
 export const verifyUser = async (username, verificationCode) => {
-	const connection = connect()
+	const connection = await connect()
 
 	await connection.query(
 		`
@@ -44,9 +42,9 @@ export const verifyUser = async (username, verificationCode) => {
 }
 
 export const getUser = async username => {
-	const connection = connect()
+	const connection = await connect()
 
-	await connection.query(
+	const results = await connection.query(
 		'SELECT * FROM users WHERE username = ?',
 		[username],
 	)
@@ -58,11 +56,11 @@ export const getUser = async username => {
 		throw error
 	}
 
-	return results[0]
+	return results[0][0]
 }
 
 export const deleteUser = async username => {
-	const connection = connect()
+	const connection = await connect()
 
 	await connection.query(
 		'DELETE FROM users WHERE username = ?',

@@ -17,13 +17,14 @@ export const signup = async (req, res) => {
 
 	try {
 		const customer = await stripe.customers.create({ email, name })
-		const stripeCustomerId = customer.id
+		stripeCustomerId = customer.id
 	} catch (e) {
 		console.error('Error creating stripe customer: ', e)
 		res.writeHead(500, { 'Content-Type': 'application/json' })
 		res.end(JSON.stringify({
 			message: 'Something went wrong. Your account was not created.',
 		}))
+		res.sent = true
 		return
 	}
 
@@ -40,10 +41,11 @@ export const signup = async (req, res) => {
 		${Math.floor(Math.random() * 5)}
 	`.replace(/\t/g, '')
 
-	sendEmail(email, 'account verification', emailMessage)
+	//sendEmail(email, 'account verification', emailMessage)
 
 	res.writeHead(200, { 'Content-Type': 'application/json' })
 	res.end(JSON.stringify({
 		message: 'Your account was successfully created.',
 	}))
+	res.sent = true
 }
