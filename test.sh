@@ -6,14 +6,18 @@ case $1 in
 		curl -v \
 			'localhost:8080/user/signup' \
 			-H 'Content-Type: application/json' \
-			-d '{ "username": "username", "password": "password" }'
+			-d '{
+					"username": "username",
+					"password": "password",
+					"email": "mhanberry1@gmail.com"
+				}'
 		;;
 
 	verify)
 		curl -v \
 			localhost:8080/user/verify \
 			-H 'Content-Type: application/json' \
-			-d '{ "username": "username", "verificationCode": "" }'
+			-d '{ "username": "username", "verificationCode": "36849" }'
 		;;
 
 	login)

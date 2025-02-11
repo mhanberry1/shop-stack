@@ -41,6 +41,12 @@ const server = http.createServer(async (req, res) => {
 	req.on('end', async () => {
 		try {
 			req.body = JSON.parse(body || '{}')
+		} catch (e) {
+			res.writeHead(400, { 'Content-Type': 'application/json'})
+			res.end(JSON.stringify({ message: 'request JSON body malformed.' }))
+		}
+
+		try {
 			await routeHandler(req, res)
 		} catch (e) {
 			console.error(e)

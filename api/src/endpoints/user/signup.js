@@ -28,20 +28,23 @@ export const signup = async (req, res) => {
 		return
 	}
 
+	const verificationCode = Math.floor(Math.random() * Math.pow(10, 5))
+
 	await addUser(
 		stripeCustomerId,
 		username,
 		makeSaltHash(password),
+		verificationCode,
 	)
 
 	const emailMessage = `
 		Welcome to Stitch Cafe's online shop!
 
 		Here is your account verification code:
-		${Math.floor(Math.random() * 5)}
+		${verificationCode}
 	`.replace(/\t/g, '')
 
-	//sendEmail(email, 'account verification', emailMessage)
+	await sendEmail(email, 'account verification', emailMessage)
 
 	res.writeHead(200, { 'Content-Type': 'application/json' })
 	res.end(JSON.stringify({

@@ -9,15 +9,21 @@ const connect = () => mysql.createConnection({
 
 // User operations
 
-export const addUser = async (stripeCustomerId, username, password) => {
+export const addUser = async (
+	stripeCustomerId,
+	username,
+	password,
+	verificationCode,
+) => {
 	const connection = await connect()
 
 	await connection.query(
 		`
-			INSERT INTO users (stripeCustomerId, username, password, isAdmin)
-				SELECT ?, ?, ?, (SELECT COUNT(*) FROM users) = 0;
+			INSERT INTO users
+				(stripeCustomerId, username, password, verificationCode, isAdmin)
+				SELECT ?, ?, ?, ?, (SELECT COUNT(*) FROM users) = 0;
 		`,
-		[stripeCustomerId, username, password],
+		[stripeCustomerId, username, password, verificationCode],
 	)
 	await connection.end()
 }
@@ -25,7 +31,7 @@ export const addUser = async (stripeCustomerId, username, password) => {
 export const verifyUser = async (username, verificationCode) => {
 	const connection = await connect()
 
-	await connection.query(
+	const result = await connection.query(
 		`
 			UPDATE users SET isVerified = true
 				WHERE username = ? AND verificationCode = ?;
@@ -34,8 +40,8 @@ export const verifyUser = async (username, verificationCode) => {
 	)
 	await connection.end()
 
-	if (result.affectedRows == 0) {
-		const error = new Error('the user could not be verified')
+	if (result[0].affectedRows == 0) {
+		const error = new Error('The user could not be verified.')
 		error.name = 'VerificationFailed'
 		throw error
 	}
@@ -49,12 +55,6 @@ export const getUser = async username => {
 		[username],
 	)
 	await connection.end()
-
-	if (results.length == 0) {
-		const error = new Error('the user could not be found')
-		error.name = 'UserNotFound'
-		throw error
-	}
 
 	return results[0][0]
 }

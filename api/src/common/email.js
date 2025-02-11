@@ -20,7 +20,6 @@ const transporter = nodemailer.createTransport({
 
 export const sendEmail = async (to, subject, text) =>
 	await transporter.sendMail({
-		from: process.env.EMAIL,
 		to,
 		subject,
 		text,
