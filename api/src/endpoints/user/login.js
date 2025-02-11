@@ -18,6 +18,15 @@ export const login = async (req, res) => {
 		return
 	}
 
+	if (!user) {
+		res.writeHead(404, { 'Content-Type': 'application/json' })
+		res.end(JSON.stringify({
+			message: 'User not found'
+		}))
+		res.sent = true
+		return
+	}
+
 	if (!verifySaltHash(password, user.password)) {
 		res.writeHead(400, { 'Content-Type': 'application/json' })
 		res.end(JSON.stringify({
@@ -38,7 +47,12 @@ export const login = async (req, res) => {
 
 	res.writeHead(200, {
 		'Content-Type': 'application/json',
-		'Set-Cookie': `authToken=${makeToken(username)}`,
+		'Set-Cookie': [
+			`authToken=${makeToken(username)}`,
+			'HttpOnly',
+			'Secure',
+			'SameSite=Strict',
+		].join('; ')
 	})
 	res.end(JSON.stringify({
 		message: 'The user has been logged in.',

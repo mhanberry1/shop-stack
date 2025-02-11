@@ -66,6 +66,7 @@ export const deleteUser = async username => {
 		'DELETE FROM users WHERE username = ?',
 		[username],
 	)
+
 	await connection.end()
 }
 

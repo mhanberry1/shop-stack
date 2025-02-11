@@ -17,12 +17,13 @@ export const authenticate = (req, res) => {
 			e => e.trim().split(/=(.*)/s).slice(0,2)
 		)
 	)['authToken']
-	const [ username, signature ] = token
+	const [ payload, signature ] = token
 		.split('.')
 	const expectedSig = crypto
 		.createHmac('sha256', process.env.SECRET)
-		.update(username)
+		.update(payload)
 		.digest('base64')
+	const username = atob(payload)
 
 	if (signature == expectedSig) return username
 
