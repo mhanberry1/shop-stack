@@ -71,3 +71,54 @@ export const deleteUser = async username => {
 }
 
 // Product operations
+
+export const addProduct = async (stripeProductId, quantity) => {
+	const connection = await connect()
+
+	await connection.query(
+		`
+			INSERT INTO products (stripeProductId, quantity)
+				VALUES (?, ?);
+		`,
+		[stripeProductId, quantity]
+	)
+	await connection.end()
+}
+
+export const updateProduct = async (stripeProductId, quantity) => {
+	const connection = await connect()
+
+	await connection.query(
+		`
+			UPDATE products
+				SET quantity = ?
+				WHERE stripeProductId = ?
+		`,
+		[quantity, stripeProductId]
+	)
+	await connection.end()
+}
+
+export const getAllProducts = async () => {
+	const connection = await connect()
+
+	const results =
+		await connection.query('SELECT * from products')
+
+	await connection.end()
+
+	return results[0]
+}
+
+export const deleteProduct = async (stripeProductId) => {
+	const connection = await connect()
+
+	await connection.query(
+		`
+			DELETE FROM products
+				WHERE stripeProductId = ?
+		`,
+		[stripeProductId]
+	)
+	await connection.end()
+}
