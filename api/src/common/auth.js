@@ -46,10 +46,12 @@ export const authenticate = (req, res) => {
 		.update(payload)
 		.digest('base64')
 	const {
+		stripeCustomerId,
 		username,
 		isAdmin,
 		expiration,
 	} = JSON.parse(atob(payload))
+	console.log(JSON.parse(atob(payload)))
 
 	if (signature != expectedSig) {
 		res.writeHead(400, {
@@ -86,5 +88,10 @@ export const authenticate = (req, res) => {
 		'SameSite=Strict',
 	].join('; ')
 
-	return { username, isAdmin, newAuthCookie }
+	return {
+		stripeCustomerId,
+		username,
+		isAdmin,
+		newAuthCookie,
+	}
 }

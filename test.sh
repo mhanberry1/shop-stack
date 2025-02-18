@@ -35,9 +35,9 @@ case $1 in
 
 	updateUser)
 		curl -v \
-			'localhost:8080/user/update' \
+			'localhost:8080/user' \
 			-H 'Content-Type: application/json' \
-			-H 'Cookie: authToken=eyJ1c2VybmFtZSI6InVzZXJuYW1lIiwiaXNBZG1pbiI6MSwiZXhwaXJhdGlvbiI6MTc0NDY5Nzg5MTA1N30=.8rB0iMZPm3YOJhz65SvN2FN9bHOvK3aoD0YiFYUNkLE=' \
+			-H 'Cookie: authToken=eyJzdHJpcGVDdXN0b21lcklkIjoiY3VzX1JraUJWb21Kb2N3NkZPIiwidXNlcm5hbWUiOiJ1c2VybmFtZSIsImlzQWRtaW4iOjEsImV4cGlyYXRpb24iOjE3NDUwMzg3OTU0Njd9.8/dn3LSorm2mwISp7E7OIfcZlzInu+/D7lGoi1+8jUY=; HttpOnly; Secure; SameSite=Strict' \
 			-d '{
 					"password": "password",
 					"stripeArgs": {
@@ -46,11 +46,18 @@ case $1 in
 				}'
 		;;
 
+	getUserInfo)
+		curl -v \
+			'localhost:8080/user' \
+			-H 'Content-Type: application/json' \
+			-H 'Cookie: authToken=eyJzdHJpcGVDdXN0b21lcklkIjoiY3VzX1JraUJWb21Kb2N3NkZPIiwidXNlcm5hbWUiOiJ1c2VybmFtZSIsImlzQWRtaW4iOjEsImV4cGlyYXRpb24iOjE3NDUwMzg3OTU0Njd9.8/dn3LSorm2mwISp7E7OIfcZlzInu+/D7lGoi1+8jUY=; HttpOnly; Secure; SameSite=Strict'
+		;;
+
 	deleteUser)
 		curl -v -X DELETE \
 			localhost:8080/user \
 			-H 'Content-Type: application/json' \
-			-H 'Cookie: authToken=eyJ1c2VybmFtZSI6InVzZXJuYW1lIiwiaXNBZG1pbiI6MSwiZXhwaXJhdGlvbiI6MTc0NDY5Nzg5MTA1N30=.8rB0iMZPm3YOJhz65SvN2FN9bHOvK3aoD0YiFYUNkLE=' \
+			-H 'Cookie: authToken=eyJzdHJpcGVDdXN0b21lcklkIjoiY3VzX1JraUJWb21Kb2N3NkZPIiwidXNlcm5hbWUiOiJ1c2VybmFtZSIsImlzQWRtaW4iOjEsImV4cGlyYXRpb24iOjE3NDUwMzg3OTU0Njd9.8/dn3LSorm2mwISp7E7OIfcZlzInu+/D7lGoi1+8jUY=; HttpOnly; Secure; SameSite=Strict'
 		;;
 	
 	createProducts)
@@ -94,7 +101,7 @@ case $1 in
 	listProducts)
 		curl -v \
 			'localhost:8080/products' \
-			-H 'Content-Type: application/json' \
+			-H 'Content-Type: application/json'
 		;;
 
 	deleteProducts)
@@ -113,3 +120,5 @@ case $1 in
 		echo -n "unknown operation"
 		;;
 esac
+
+echo ""

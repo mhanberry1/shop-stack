@@ -50,7 +50,7 @@ export const login = async (req, res) => {
 	res.writeHead(200, {
 		'Content-Type': 'application/json',
 		'Set-Cookie': [
-			`authToken=${makeToken(username, isAdmin, stripeCustomerId)}`,
+			`authToken=${makeToken(stripeCustomerId, username, isAdmin)}`,
 			'HttpOnly',
 			'Secure',
 			'SameSite=Strict',
