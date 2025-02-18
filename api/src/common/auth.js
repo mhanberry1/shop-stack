@@ -51,7 +51,6 @@ export const authenticate = (req, res) => {
 		isAdmin,
 		expiration,
 	} = JSON.parse(atob(payload))
-	console.log(JSON.parse(atob(payload)))
 
 	if (signature != expectedSig) {
 		res.writeHead(400, {

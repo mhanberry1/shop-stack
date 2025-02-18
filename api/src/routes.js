@@ -22,7 +22,7 @@ const routes = {
 	'POST /user/signup': signup,
 	'POST /user/verify': verify,
 	'POST /user/login': login,
-	'POST /user/logout': logout,
+	'GET /user/logout': logout,
 	'PUT /products': createProducts,
 	'POST /products': updateProducts,
 	'GET /products': listProducts,

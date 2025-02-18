@@ -36,7 +36,7 @@ export const login = async (req, res) => {
 		return
 	}
 
-	if (false && !user.isVerified) {
+	if (!user.isVerified) {
 		res.writeHead(401, { 'Content-Type': 'application/json' })
 		res.end(JSON.stringify({
 			message: 'This account has not been verified.',

@@ -1,5 +1,16 @@
 #!/bin/bash
 
+while getopts ":a:v:" opt; do
+	case $opt in
+		a)
+			AUTH_COOKIE=$OPTARG
+			;;
+		v)
+			VERIFICATION_CODE=$OPTARG
+			;;
+	esac
+done
+
 case $1 in
 
 	signup)
@@ -15,9 +26,12 @@ case $1 in
 
 	verify)
 		curl -v \
-			localhost:8080/user/verify \
+			'localhost:8080/user/verify' \
 			-H 'Content-Type: application/json' \
-			-d '{ "username": "username", "verificationCode": "36849" }'
+			-d '{
+					"username": "username",
+					"verificationCode": "'${VERIFICATION_CODE}'"
+				}'
 		;;
 
 	login)
@@ -37,7 +51,7 @@ case $1 in
 		curl -v \
 			'localhost:8080/user' \
 			-H 'Content-Type: application/json' \
-			-H 'Cookie: authToken=eyJzdHJpcGVDdXN0b21lcklkIjoiY3VzX1JraUJWb21Kb2N3NkZPIiwidXNlcm5hbWUiOiJ1c2VybmFtZSIsImlzQWRtaW4iOjEsImV4cGlyYXRpb24iOjE3NDUwMzg3OTU0Njd9.8/dn3LSorm2mwISp7E7OIfcZlzInu+/D7lGoi1+8jUY=; HttpOnly; Secure; SameSite=Strict' \
+			-H "Cookie: ${AUTH_COOKIE}" \
 			-d '{
 					"password": "password",
 					"stripeArgs": {
@@ -50,21 +64,21 @@ case $1 in
 		curl -v \
 			'localhost:8080/user' \
 			-H 'Content-Type: application/json' \
-			-H 'Cookie: authToken=eyJzdHJpcGVDdXN0b21lcklkIjoiY3VzX1JraUJWb21Kb2N3NkZPIiwidXNlcm5hbWUiOiJ1c2VybmFtZSIsImlzQWRtaW4iOjEsImV4cGlyYXRpb24iOjE3NDUwMzg3OTU0Njd9.8/dn3LSorm2mwISp7E7OIfcZlzInu+/D7lGoi1+8jUY=; HttpOnly; Secure; SameSite=Strict'
+			-H "Cookie: ${AUTH_COOKIE}"
 		;;
 
 	deleteUser)
 		curl -v -X DELETE \
-			localhost:8080/user \
+			'localhost:8080/user' \
 			-H 'Content-Type: application/json' \
-			-H 'Cookie: authToken=eyJzdHJpcGVDdXN0b21lcklkIjoiY3VzX1JraUJWb21Kb2N3NkZPIiwidXNlcm5hbWUiOiJ1c2VybmFtZSIsImlzQWRtaW4iOjEsImV4cGlyYXRpb24iOjE3NDUwMzg3OTU0Njd9.8/dn3LSorm2mwISp7E7OIfcZlzInu+/D7lGoi1+8jUY=; HttpOnly; Secure; SameSite=Strict'
+			-H "Cookie: ${AUTH_COOKIE}"
 		;;
 	
 	createProducts)
 		curl -v -X PUT \
 			'localhost:8080/products' \
 			-H 'Content-Type: application/json' \
-			-H 'Cookie: authToken=eyJ1c2VybmFtZSI6InVzZXJuYW1lIiwiaXNBZG1pbiI6MSwiZXhwaXJhdGlvbiI6MTc0NDY5Nzg5MTA1N30=.8rB0iMZPm3YOJhz65SvN2FN9bHOvK3aoD0YiFYUNkLE=' \
+			-H "Cookie: ${AUTH_COOKIE}" \
 			-d '{
 					"products": [{
 						"quantity": 10,
@@ -84,7 +98,7 @@ case $1 in
 		curl -v \
 			'localhost:8080/products' \
 			-H 'Content-Type: application/json' \
-			-H 'Cookie: authToken=eyJ1c2VybmFtZSI6InVzZXJuYW1lIiwiaXNBZG1pbiI6MSwiZXhwaXJhdGlvbiI6MTc0NDY5Nzg5MTA1N30=.8rB0iMZPm3YOJhz65SvN2FN9bHOvK3aoD0YiFYUNkLE=' \
+			-H "Cookie: ${AUTH_COOKIE}" \
 			-d '{
 					"products": [{
 						"quantity": 10,
@@ -108,7 +122,7 @@ case $1 in
 		curl -v -X DELETE \
 			'localhost:8080/products' \
 			-H 'Content-Type: application/json' \
-			-H 'Cookie: authToken=eyJ1c2VybmFtZSI6InVzZXJuYW1lIiwiaXNBZG1pbiI6MSwiZXhwaXJhdGlvbiI6MTc0NDY5Nzg5MTA1N30=.8rB0iMZPm3YOJhz65SvN2FN9bHOvK3aoD0YiFYUNkLE=' \
+			-H "Cookie: ${AUTH_COOKIE}" \
 			-d '{
 					"stripeProductIds": [
 						"prod_Rl60skMxZaSD6j"

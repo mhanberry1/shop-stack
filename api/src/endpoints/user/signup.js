@@ -1,4 +1,4 @@
-import { addUser } from '#src/common/db.js'
+import { getUser, addUser } from '#src/common/db.js'
 import { makeSaltHash } from '#src/common/hash.js'
 import { sendEmail } from '#src/common/email.js'
 import Stripe from 'stripe'
@@ -13,20 +13,19 @@ export const signup = async (req, res) => {
 		name,
 	} = req.body
 
-	let stripeCustomerId
+	const user = await getUser(username)
 
-	try {
-		const customer = await stripe.customers.create({ email, name })
-		stripeCustomerId = customer.id
-	} catch (e) {
-		console.error('Error creating stripe customer: ', e)
-		res.writeHead(500, { 'Content-Type': 'application/json' })
+	if (user) {
+		res.writeHead(400, { 'Content-Type': 'application/json' })
 		res.end(JSON.stringify({
-			message: 'Something went wrong. Your account was not created.',
+			message: 'That username is already taken.',
 		}))
 		res.sent = true
 		return
 	}
+
+	const stripeCustomerId =
+		(await stripe.customers.create({ email, name })).id
 
 	const verificationCode = Math.floor(Math.random() * Math.pow(10, 5))
 
