@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "npx nodemon src/index.js"
+    "start": "npm i && npx nodemon src/index.js"
   },
   "author": "rhotate",
   "license": "GPL-3.0-or-later",
