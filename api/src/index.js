@@ -4,6 +4,7 @@ import { signup } from '#src/endpoints/user/signup.js'
 import { verify } from '#src/endpoints/user/verify.js'
 import { login } from '#src/endpoints/user/login.js'
 import { logout } from '#src/endpoints/user/logout.js'
+import { updateUser } from '#src/endpoints/user/update.js'
 import { deleteUser } from '#src/endpoints/user/delete.js'
 import {
 	createProducts,
@@ -18,6 +19,7 @@ const routes = {
 	'POST /user/verify': verify,
 	'POST /user/login': login,
 	'POST /user/logout': logout,
+	'POST /user/update': updateUser,
 	'DELETE /user': deleteUser,
 	'PUT /products': createProducts,
 	'POST /products': updateProducts,

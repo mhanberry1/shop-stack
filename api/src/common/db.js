@@ -59,6 +59,20 @@ export const getUser = async username => {
 	return results[0][0]
 }
 
+export const updateUser = async (username, password) => {
+	const connection = await connect()
+
+	await connection.query(
+		`
+			UPDATE users
+				SET password = ?
+				WHERE username = ?
+		`,
+		[password, username]
+	)
+	await connection.end()
+}
+
 export const deleteUser = async username => {
 	const connection = await connect()
 
