@@ -3,7 +3,8 @@ services:
   api:
     image: node
     working_dir: /api
-    entrypoint: npm start
+    entrypoint: npm run $API_COMMAND
+    restart: always
     environment:
       SECRET: $SECRET
       STRIPE_API_KEY: $STRIPE_API_KEY
@@ -22,6 +23,7 @@ services:
 
   db:
     image: mysql
+    restart: always
     environment:
       MYSQL_RANDOM_ROOT_PASSWORD: yes
       MYSQL_DATABASE: shop_stack
