@@ -9,14 +9,11 @@ import Stripe from 'stripe'
 const stripe = new Stripe(process.env.STRIPE_API_KEY)
 
 export const getUserInfo = async (req, res) => {
-	const { stripeCustomerId, newAuthCookie } = authenticate(req, res)
+	const { stripeCustomerId } = authenticate(req, res)
 
 	const userInfo = await stripe.customers.retrieve(stripeCustomerId)
 
-	res.writeHead(200, {
-		'Content-Type': 'application/json',
-		'Set-Cookie': newAuthCookie,
-	})
+	res.writeHead(200, { 'Content-Type': 'application/json' })
 	res.end(JSON.stringify(userInfo))
 }
 
@@ -24,7 +21,6 @@ export const updateUser = async (req, res) => {
 	const {
 		stripeCustomerId,
 		username,
-		newAuthCookie
 	} = authenticate(req, res)
 	const { password, stripeArgs } = req.body
 
@@ -34,10 +30,7 @@ export const updateUser = async (req, res) => {
 		await updateUserDb(username, makeSaltHash(password))
 	}
 
-	res.writeHead(200, {
-		'Content-Type': 'application/json',
-		'Set-Cookie': newAuthCookie,
-	})
+	res.writeHead(200, { 'Content-Type': 'application/json' })
 	res.end(JSON.stringify({ message: 'User info has been updated.' }))
 }
 

@@ -10,7 +10,7 @@ import Stripe from 'stripe'
 const stripe = new Stripe(process.env.STRIPE_API_KEY)
 
 export const createProducts = async (req, res) => {
-	const { username, isAdmin, newAuthCookie } = authenticate(req, res)
+	const { username, isAdmin } = authenticate(req, res)
 	const { products } = req.body
 
 	if ( !isAdmin ) {
@@ -36,10 +36,7 @@ export const createProducts = async (req, res) => {
 		await addProduct(stripeProductId, quantity)
 	}
 
-	res.writeHead(200, {
-		'Content-Type': 'application/json',
-		'Set-Cookie': newAuthCookie,
-	})
+	res.writeHead(200, { 'Content-Type': 'application/json' })
 	res.end(JSON.stringify({
 		message: 'The products were successfully added.',
 	}))
@@ -47,7 +44,7 @@ export const createProducts = async (req, res) => {
 }
 
 export const updateProducts = async (req, res) => {
-	const { username, isAdmin, newAuthCookie } = authenticate(req, res)
+	const { username, isAdmin } = authenticate(req, res)
 	const { products } = req.body
 
 	if ( !isAdmin ) {
@@ -92,10 +89,7 @@ export const updateProducts = async (req, res) => {
 		await updateProduct(stripeProductId, quantity)
 	}
 
-	res.writeHead(200, {
-		'Content-Type': 'application/json',
-		'Set-Cookie': newAuthCookie,
-	})
+	res.writeHead(200, { 'Content-Type': 'application/json' })
 	res.end(JSON.stringify({
 		message: 'The products were successfully updated.',
 	}))
@@ -122,7 +116,7 @@ export const listProducts = async (req, res) => {
 }
 
 export const deleteProducts = async (req, res) => {
-	const { username, isAdmin, newAuthCookie } = authenticate(req, res)
+	const { username, isAdmin } = authenticate(req, res)
 	const { stripeProductIds } = req.body
 
 	if ( !isAdmin ) {
@@ -145,10 +139,7 @@ export const deleteProducts = async (req, res) => {
 		await deleteProduct(stripeProductId)
 	}
 
-	res.writeHead(200, {
-		'Content-Type': 'application/json',
-		'Set-Cookie': newAuthCookie,
-	})
+	res.writeHead(200, { 'Content-Type': 'application/json' })
 	res.end(JSON.stringify({
 		message: 'The products were successfully deleted.',
 	}))

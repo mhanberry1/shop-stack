@@ -80,17 +80,19 @@ export const authenticate = (req, res) => {
 		throw error
 	}
 
-	const newAuthCookie = [
-		`authToken=${makeToken(stripeCustomerId, username, isAdmin)}`,
-		'HttpOnly',
-		'Secure',
-		'SameSite=Strict',
-	].join('; ')
+	res.setHeader(
+		'Set-Cookie',
+		[
+			`authToken=${makeToken(stripeCustomerId, username, isAdmin)}`,
+			'HttpOnly',
+			'Secure',
+			'SameSite=Strict',
+		].join('; ')
+	)
 
 	return {
 		stripeCustomerId,
 		username,
 		isAdmin,
-		newAuthCookie,
 	}
 }
