@@ -1,6 +1,11 @@
 import http from 'http'
 import { getRouteHandler } from '#src/routes.js'
 
+const handleCORS = res => {
+	res.setHeader('Access-Control-Allow-Origin', process.env.FRONTEND_ORIGIN)
+	res.setHeader('Access-Control-Allow-Credentials', 'true')
+}
+
 const server = http.createServer(async (req, res) => {
 	const routeHandler = getRouteHandler(req, res)
 	let body = ''
@@ -10,6 +15,8 @@ const server = http.createServer(async (req, res) => {
 	})
 
 	req.on('end', async () => {
+		handleCORS(res)
+
 		try {
 			req.body = JSON.parse(body || '{}')
 		} catch (e) {
