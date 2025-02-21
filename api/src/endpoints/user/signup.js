@@ -37,6 +37,8 @@ export const signup = async (req, res) => {
 	)
 
 	const emailMessage = `
+		Hi ${username},
+
 		Welcome to Stitch Cafe's online shop!
 
 		Here is your account verification code:
