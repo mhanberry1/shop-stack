@@ -101,6 +101,7 @@ export const listProducts = async (req, res) => {
 
 	const stripeProducts = (await stripe.products.list({
 		ids: dbProducts.map(p => p.stripeProductId),
+		expand: ['data.default_price', 'data.tax_code'],
 	})).data
 
 	const products = dbProducts.map(dbProd => ({

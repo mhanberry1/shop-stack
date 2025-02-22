@@ -2,11 +2,26 @@ import http from 'http'
 import { getRouteHandler } from '#src/routes.js'
 
 const handleCORS = res => {
+	if (res.sent) return
+
 	res.setHeader('Access-Control-Allow-Origin', process.env.FRONTEND_ORIGIN)
 	res.setHeader('Access-Control-Allow-Credentials', 'true')
+	res.setHeader(
+		'Access-Control-Allow-Methods',
+		'GET, POST, PUT, DELETE, OPTIONS',
+	)
 }
 
 const server = http.createServer(async (req, res) => {
+	handleCORS(res)
+
+	if (req.method == 'OPTIONS') {
+		res.writeHead(200)
+		res.end()
+		res.sent = true
+		return
+	}
+
 	const routeHandler = getRouteHandler(req, res)
 	let body = ''
 
@@ -15,7 +30,7 @@ const server = http.createServer(async (req, res) => {
 	})
 
 	req.on('end', async () => {
-		handleCORS(res)
+
 
 		try {
 			req.body = JSON.parse(body || '{}')

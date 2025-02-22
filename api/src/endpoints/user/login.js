@@ -54,6 +54,7 @@ export const login = async (req, res) => {
 			'HttpOnly',
 			'Secure',
 			'SameSite=Strict',
+			'Path=/',
 		].join('; ')
 	})
 	res.end(JSON.stringify({

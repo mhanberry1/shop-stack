@@ -18,7 +18,7 @@ export const makeToken = (stripeCustomerId, username, isAdmin) => {
 }
 
 export const authenticate = (req, res) => {
-	const cookie = req.headers['cookie']
+	const cookie = req.headers.cookie
 	const token = Object.fromEntries(
 		cookie?.split(';').map(
 			e => e.trim().split(/=(.*)/s).slice(0,2)
@@ -87,6 +87,7 @@ export const authenticate = (req, res) => {
 			'HttpOnly',
 			'Secure',
 			'SameSite=Strict',
+			'Path=/',
 		].join('; ')
 	)
 
