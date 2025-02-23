@@ -133,7 +133,7 @@ export const getProduct = async stripeProductId => {
 
 	await connection.end()
 
-	return results[0]
+	return results[0][0]
 }
 
 export const getAllProducts = async () => {

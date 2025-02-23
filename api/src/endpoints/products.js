@@ -103,7 +103,9 @@ export const listProducts = async (req, res) => {
 	if (req.queryParams.get('stripeProductIds')) {
 		const stripeProductIds =
 			JSON.parse(req.queryParams.get('stripeProductIds') || '[]')
-		dbProducts = stripeProductIds.map(id => getProduct(id))
+		dbProducts = await Promise.all(
+			stripeProductIds.map(id => getProduct(id))
+		)
 	} else {
 		dbProducts = await getAllProducts()
 	}
