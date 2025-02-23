@@ -3,6 +3,7 @@ import {
 	addProduct,
 	updateProduct,
 	getAllProducts,
+	getProduct,
 	deleteProduct,
 } from '#src/common/db.js'
 import Stripe from 'stripe'
@@ -97,7 +98,15 @@ export const updateProducts = async (req, res) => {
 }
 
 export const listProducts = async (req, res) => {
-	const dbProducts = await getAllProducts()
+	let dbProducts
+
+	if (req.queryParams.get('stripeProductIds')) {
+		const stripeProductIds =
+			JSON.parse(req.queryParams.get('stripeProductIds') || '[]')
+		dbProducts = stripeProductIds.map(id => getProduct(id))
+	} else {
+		dbProducts = await getAllProducts()
+	}
 
 	const stripeProducts = (await stripe.products.list({
 		ids: dbProducts.map(p => p.stripeProductId),

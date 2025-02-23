@@ -43,8 +43,7 @@ case $1 in
 
 	logout)
 		curl -v \
-			'localhost:8080/user/logout' \
-			-H 'Content-Type: application/json' \
+			'localhost:8080/user/logout'
 		;;
 
 	updateUser)
@@ -63,7 +62,6 @@ case $1 in
 	getUserInfo)
 		curl -v \
 			'localhost:8080/user' \
-			-H 'Content-Type: application/json' \
 			-H "Cookie: ${AUTH_COOKIE}"
 		;;
 
@@ -114,14 +112,17 @@ case $1 in
 
 	listProducts)
 		curl -v \
-			'localhost:8080/products' \
-			-H 'Content-Type: application/json'
+			'localhost:8080/products'
+		;;
+
+	getProduct)
+		curl -v \
+			"localhost:8080/products?stripeProductIds=[${STRIPE_PRODUCT_ID}]"
 		;;
 
 	deleteProducts)
 		curl -v -X DELETE \
 			'localhost:8080/products' \
-			-H 'Content-Type: application/json' \
 			-H "Cookie: ${AUTH_COOKIE}" \
 			-d '{
 					"stripeProductIds": [

@@ -20,8 +20,8 @@ export const addUser = async (
 	await connection.query(
 		`
 			INSERT INTO users
-				(stripeCustomerId, username, password, verificationCode, isAdmin)
-				SELECT ?, ?, ?, ?, (SELECT COUNT(*) FROM users) = 0;
+			(stripeCustomerId, username, password, verificationCode, isAdmin)
+			SELECT ?, ?, ?, ?, (SELECT COUNT(*) FROM users) = 0
 		`,
 		[stripeCustomerId, username, password, verificationCode],
 	)
@@ -34,7 +34,7 @@ export const verifyUser = async (username, verificationCode) => {
 	const result = await connection.query(
 		`
 			UPDATE users SET isVerified = true
-				WHERE username = ? AND verificationCode = ?;
+			WHERE username = ? AND verificationCode = ?
 		`,
 		[username, verificationCode]
 	)
@@ -51,7 +51,10 @@ export const getUser = async username => {
 	const connection = await connect()
 
 	const results = await connection.query(
-		'SELECT * FROM users WHERE username = ?',
+		`
+			SELECT * FROM users
+			WHERE username = ?
+		`,
 		[username],
 	)
 	await connection.end()
@@ -65,8 +68,8 @@ export const updateUser = async (username, password) => {
 	await connection.query(
 		`
 			UPDATE users
-				SET password = ?
-				WHERE username = ?
+			SET password = ?
+			WHERE username = ?
 		`,
 		[password, username]
 	)
@@ -77,7 +80,10 @@ export const deleteUser = async username => {
 	const connection = await connect()
 
 	await connection.query(
-		'DELETE FROM users WHERE username = ?',
+		`
+			DELETE FROM users
+			WHERE username = ?
+		`,
 		[username],
 	)
 
@@ -92,7 +98,7 @@ export const addProduct = async (stripeProductId, quantity) => {
 	await connection.query(
 		`
 			INSERT INTO products (stripeProductId, quantity)
-				VALUES (?, ?);
+			VALUES (?, ?);
 		`,
 		[stripeProductId, quantity]
 	)
@@ -105,32 +111,50 @@ export const updateProduct = async (stripeProductId, quantity) => {
 	await connection.query(
 		`
 			UPDATE products
-				SET quantity = ?
-				WHERE stripeProductId = ?
+			SET quantity = ?
+			WHERE stripeProductId = ?
 		`,
 		[quantity, stripeProductId]
 	)
 	await connection.end()
 }
 
-export const getAllProducts = async () => {
+export const getProduct = async stripeProductId => {
 	const connection = await connect()
 
 	const results =
-		await connection.query('SELECT * from products')
+		await connection.query(
+			`
+				SELECT * from products
+				WHERE stripeProductId = ?
+			`,
+			[stripeProductId]
+		)
 
 	await connection.end()
 
 	return results[0]
 }
 
-export const deleteProduct = async (stripeProductId) => {
+export const getAllProducts = async () => {
+	const connection = await connect()
+
+	const results = await connection.query(
+		'SELECT * from products'
+	)
+
+	await connection.end()
+
+	return results[0]
+}
+
+export const deleteProduct = async stripeProductId => {
 	const connection = await connect()
 
 	await connection.query(
 		`
 			DELETE FROM products
-				WHERE stripeProductId = ?
+			WHERE stripeProductId = ?
 		`,
 		[stripeProductId]
 	)

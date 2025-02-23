@@ -25,6 +25,8 @@ const server = http.createServer(async (req, res) => {
 	const routeHandler = getRouteHandler(req, res)
 	let body = ''
 
+	req.queryParams = new URLSearchParams(req.url.split('?')[1])
+
 	req.on('data', chunk => {
 		body += chunk.toString()
 	})
