@@ -130,6 +130,13 @@ case $1 in
 					]
 				}'
 		;;
+
+	uploadFile)
+		curl -v -X POST \
+			'localhost:8080/upload' \
+			-H "Cookie: ${AUTH_COOKIE}" \
+			-F "file=@README.md"
+		;;
 	
 	*)
 		echo -n "unknown operation"

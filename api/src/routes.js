@@ -14,6 +14,7 @@ import {
 	deleteProducts,
 } from '#src/endpoints/products.js'
 import { checkout } from '#src/endpoints/checkout.js'
+import { upload } from '#src/endpoints/upload.js'
 
 const routes = {
 	'POST /user': updateUser,
@@ -28,6 +29,7 @@ const routes = {
 	'GET /products': listProducts,
 	'DELETE /products': deleteProducts,
 	'POST /checkout': checkout,
+	'POST /upload': upload,
 }
 
 export const getRouteHandler = (req, res) => {

@@ -28,14 +28,15 @@ const server = http.createServer(async (req, res) => {
 	req.queryParams = new URLSearchParams(req.url.split('?')[1])
 
 	req.on('data', chunk => {
-		body += chunk.toString()
+		body += chunk
 	})
 
 	req.on('end', async () => {
 
-
 		try {
-			req.body = JSON.parse(body || '{}')
+			req.body = req.url == '/upload'
+				? body
+				: JSON.parse(body || '{}')
 		} catch (e) {
 			res.writeHead(400, { 'Content-Type': 'application/json'})
 			res.end(JSON.stringify({ message: 'request JSON body malformed.' }))

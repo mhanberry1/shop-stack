@@ -19,6 +19,7 @@ services:
       - 8080:8080
     volumes:
       - ./api:/api
+      - uploads:/uploads
     depends_on:
       - db
 
@@ -36,3 +37,4 @@ services:
 
 volumes:
   data:
+  uploads:
