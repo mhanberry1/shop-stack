@@ -1,7 +1,21 @@
-import { promises as fs } from 'fs'
+import { authenticate } from '#src/common/auth.js'
 import { makeHash } from '#src/common/hash.js'
+import { promises as fs } from 'fs'
 
 export const upload = async (req, res) => {
+	const { isAdmin } = authenticate(req, res)
+
+	if ( !isAdmin ) {
+		res.writeHead(401, {
+			'Content-Type': 'application/json',
+		})
+		res.end(JSON.stringify({
+			message: 'The user is not authorized to upload files.',
+		}))
+		res.sent = true
+		return;
+	}
+
 	const boundary = req.headers['content-type'].split('boundary=')[1]
 	const parts = req.body.split(`--${boundary}`).slice(1, -1)
 	const uploadedFiles = []
