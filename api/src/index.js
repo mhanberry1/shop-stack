@@ -23,20 +23,19 @@ const server = http.createServer(async (req, res) => {
 	}
 
 	const routeHandler = getRouteHandler(req, res)
-	let body = ''
+	let body = Buffer.alloc(0)
 
 	req.queryParams = new URLSearchParams(req.url.split('?')[1])
 
 	req.on('data', chunk => {
-		body += chunk
+		body = Buffer.concat([body, chunk])
 	})
 
 	req.on('end', async () => {
-
 		try {
 			req.body = req.url == '/upload'
 				? body
-				: JSON.parse(body || '{}')
+				: JSON.parse(body.toString() || '{}')
 		} catch (e) {
 			res.writeHead(400, { 'Content-Type': 'application/json'})
 			res.end(JSON.stringify({ message: 'request JSON body malformed.' }))

@@ -135,7 +135,12 @@ case $1 in
 		curl -v -X POST \
 			'localhost:8080/upload' \
 			-H "Cookie: ${AUTH_COOKIE}" \
-			-F "file=@README.md"
+			-F "file=@${HOME}/Pictures/base-six.png"
+		;;
+
+	getUploadedFile)
+		curl -v \
+			'localhost:8080/upload?file=301a2bb51083dde3e7a86517c19486bd2ad047669f563665fd9acb15e99400bb.md' > test.png
 		;;
 	
 	*)
