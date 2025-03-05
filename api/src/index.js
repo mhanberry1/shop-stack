@@ -3,6 +3,7 @@ import http from 'http'
 import https from 'https'
 import { getRouteHandler } from '#src/routes.js'
 
+const certDir = `/certs/live/${process.env.BACKEND_DOMAIN}`
 
 const handleCORS = res => {
 	if (res.sent) return
@@ -59,8 +60,8 @@ const initServer = async (req, res) => {
 }
 
 const getCerts = async () => ({
-    key: await fs.readFile(`/certs/live/${BACKEND_DOMAIN}/privkey.pem`),
-    cert: await fs.readFile(`/certs/live/${BACKEND_DOMAIN}/fullchain.pem`),
+    key: await fs.readFile(`${certDir}/privkey.pem`),
+    cert: await fs.readFile(`${certDir}/fullchain.pem`),
 })
 
 let server
