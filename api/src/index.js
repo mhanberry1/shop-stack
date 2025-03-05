@@ -1,5 +1,8 @@
+import { promises as fs } from 'fs'
 import http from 'http'
+import https from 'https'
 import { getRouteHandler } from '#src/routes.js'
+
 
 const handleCORS = res => {
 	if (res.sent) return
@@ -12,7 +15,7 @@ const handleCORS = res => {
 	)
 }
 
-const server = http.createServer(async (req, res) => {
+const initServer = async (req, res) => {
 	handleCORS(res)
 
 	if (req.method == 'OPTIONS') {
@@ -53,7 +56,27 @@ const server = http.createServer(async (req, res) => {
 			res.end(JSON.stringify({ message: 'Internal Server Error.' }))
 		}
 	})
+}
+
+const getCerts = async () => ({
+    key: await fs.readFile('/certs/privKey.pem'),
+    cert: await fs.readFile('/certs/fullchain.pem'),
 })
+
+let server
+
+if (process.env.API_COMMAND == 'dev') {
+    server = http.createServer(initServer)
+} else {
+    server = https.createServer(getCerts(), initServer)
+
+    // Reload the certs every 5 mins in case they were refreshed
+    setInterval(
+        () => server.setSecureContext(getCerts()),
+        5 * 60 * 1000,
+    )
+}
+
 
 server.listen(8080, '0.0.0.0', () => {
 	console.log('Server running')

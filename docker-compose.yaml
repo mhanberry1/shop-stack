@@ -16,11 +16,13 @@ services:
       EMAIL_SERVICE: $EMAIL_SERVICE
       FRONTEND_ORIGIN: $FRONTEND_ORIGIN
       BACKEND_ORIGIN: $BACKEND_ORIGIN
+      API_COMMAND: $API_COMMAND
     ports:
       - 8080:8080
     volumes:
       - ./api:/api
       - uploads:/uploads
+      - certs:/certs
     depends_on:
       - db
 
@@ -36,6 +38,30 @@ services:
       - data:/var/lib/mysql
       - ./db:/docker-entrypoint-initdb.d
 
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - certs:/etc/letsencrypt
+    entrypoint: |
+      sh -c "
+        if [ ${API_COMMAND} = dev ]; then
+          exit 0
+        fi
+
+        trap exit TERM
+        while true; do
+          certbot certonly \\
+            --standalone \\
+            --preferred-challenges http \\
+            --email ${EMAIL} \\
+            --agree-tos \\
+            --no-eff-email \\
+            -d ${BACKEND_DOMAIN}
+          sleep 12h & wait $${!}
+        done
+      "
+
 volumes:
   data:
   uploads:
+  certs:
