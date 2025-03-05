@@ -13,7 +13,10 @@ import {
 	listProducts,
 	deleteProducts,
 } from '#src/endpoints/products.js'
-import { checkout } from '#src/endpoints/checkout.js'
+import {
+	checkout,
+	finishCheckout,
+} from '#src/endpoints/checkout.js'
 import {
 	uploadFile,
 	getUploadedFile,
@@ -32,6 +35,7 @@ const routes = {
 	'GET /products': listProducts,
 	'DELETE /products': deleteProducts,
 	'POST /checkout': checkout,
+	'POST /checkout/finsih': finishCheckout,
 	'POST /upload': uploadFile,
 	'GET /upload': getUploadedFile,
 }
