@@ -59,8 +59,8 @@ const initServer = async (req, res) => {
 }
 
 const getCerts = async () => ({
-    key: await fs.readFile('/certs/privKey.pem'),
-    cert: await fs.readFile('/certs/fullchain.pem'),
+    key: await fs.readFile(`/certs/live/${BACKEND_DOMAIN}/privkey.pem`),
+    cert: await fs.readFile(`/certs/live/${BACKEND_DOMAIN}/fullchain.pem`),
 })
 
 let server
