@@ -69,7 +69,7 @@ let server
 if (process.env.API_COMMAND == 'dev') {
     server = http.createServer(initServer)
 } else {
-    server = https.createServer(getCerts(), initServer)
+    server = https.createServer(await getCerts(), initServer)
 
     // Reload the certs every 5 mins in case they were refreshed
     setInterval(
