@@ -35,7 +35,7 @@ const routes = {
 	'GET /products': listProducts,
 	'DELETE /products': deleteProducts,
 	'POST /checkout': checkout,
-	'POST /checkout/finsih': finishCheckout,
+	'POST /checkout/finish': finishCheckout,
 	'POST /upload': uploadFile,
 	'GET /upload': getUploadedFile,
 }

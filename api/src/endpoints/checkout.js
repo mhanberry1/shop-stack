@@ -23,7 +23,7 @@ export const finishCheckout = async (req, res) => {
 	const webhookEvent = await stripe.webhooks.constructEvent(
 		req.body,
 		stripeSignature,
-		process.env.SECRET,
+		process.env.STRIPE_WEBHOOK_SECRET,
 	)
 
 	if (event.type != 'checkout.session.completed') {
