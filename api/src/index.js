@@ -36,6 +36,8 @@ const initServer = async (req, res) => {
 	})
 
 	req.on('end', async () => {
+		req.rawBody = body
+
 		try {
 			req.body = req.url == '/upload'
 				? body

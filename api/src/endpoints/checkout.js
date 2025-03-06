@@ -21,12 +21,12 @@ export const checkout = async (req, res) => {
 export const finishCheckout = async (req, res) => {
 	const stripeSignature = req.headers['stripe-signature']
 	const webhookEvent = await stripe.webhooks.constructEvent(
-		req.body,
+		req.rawBody,
 		stripeSignature,
 		process.env.STRIPE_WEBHOOK_SECRET,
 	)
 
-	if (event.type != 'checkout.session.completed') {
+	if (req.body.type != 'checkout.session.completed') {
 		res.writeHead(400, { 'Content-Type': 'application/json' })
 		res.end(JSON.stringify({
 			message: 'Invalid event type.',
@@ -36,15 +36,18 @@ export const finishCheckout = async (req, res) => {
 	}
 
 	// Send the response now to avoid a session timeout
-	res.end(200)
+	res.end()
 	res.sent = true
 
-	const lineItems = event.data.object.line_items.data
+	const sessionId = req.body.data.object.id
+	const lineItems = (await
+		stripe.checkout.sessions.listLineItems(sessionId)
+	).data
 
 	lineItems.forEach(async item => {
-		const stripeProductId = item.id
+		const stripeProductId = item.price.product
 		const purchaseQuantity = item.quantity
-		const { quantity } = await getProduct()
+		const { quantity } = await getProduct(stripeProductId)
 
 		updateProduct(
 			stripeProductId,

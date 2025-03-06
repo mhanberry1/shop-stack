@@ -7,6 +7,7 @@ services:
     restart: always
     environment:
       SECRET: $SECRET
+      STRIPE_WEBHOOK_SECRET: $STRIPE_WEBHOOK_SECRET
       STRIPE_API_KEY: $STRIPE_API_KEY
       MYSQL_PASSWORD: $MYSQL_PASSWORD
       MYSQL_USER: api_user
