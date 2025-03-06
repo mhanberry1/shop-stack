@@ -72,8 +72,8 @@ if (process.env.API_COMMAND == 'dev') {
     server = https.createServer(await getCerts(), initServer)
 
     // Reload the certs every 5 mins in case they were refreshed
-    setInterval(
-        () => server.setSecureContext(getCerts()),
+    setInterval(async () =>
+		server.setSecureContext(await getCerts()),
         5 * 60 * 1000,
     )
 }
