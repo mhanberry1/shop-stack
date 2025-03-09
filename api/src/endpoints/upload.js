@@ -71,6 +71,9 @@ export const getUploadedFile = async (req, res) => {
 	const data = await fs.readFile(`/uploads/${filename}`)
 	const contentType = mimeTypes[extension] || 'application/octet-stream'
 
-	res.writeHead(200, { 'Content-Type': contentType })
+	res.writeHead(200, {
+		'Content-Type': contentType,
+		'Cache-Control': 'public, max-age=3600',
+	})
 	res.end(data)
 }
