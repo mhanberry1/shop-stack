@@ -6,12 +6,38 @@ import {
 import Stripe from 'stripe'
 
 const stripe = new Stripe(process.env.STRIPE_API_KEY)
+const freeShippingThreshold = 4500
+const baseShippingPrice = 600
 
 export const checkout = async (req, res) => {
 	const { stripeArgs } = req.body
-
+	const lineItems = stripeArgs.line_items.map(
+		item => ({
+			...item,
+			price: stripe.prices.retrieve(item.price),
+		})
+	)
+	const totalAmount = await lineItems.reduce(
+		async (acc, { quantity, price }) => {
+			return await acc + quantity * (await price).unit_amount
+		}, 0
+	)
+	const pickup = stripeArgs.metadata.pickup
+	const freeShipping = pickup || totalAmount >= freeShippingThreshold
 	const checkoutUrl =
-		(await stripe.checkout.sessions.create(stripeArgs)).url
+		(await stripe.checkout.sessions.create({
+			...stripeArgs,
+			shipping_options: !freeShipping ? [{
+				shipping_rate_data: {
+					display_name: 'Standard ground shipping',
+					type: 'fixed_amount',
+					fixed_amount: {
+						currency: 'USD',
+						amount: baseShippingPrice,
+					},
+				}
+			}] : undefined,
+		})).url
 
 	res.writeHead(200, { 'Content-Type': 'application/json' })
 	res.end(JSON.stringify({ checkoutUrl }))
