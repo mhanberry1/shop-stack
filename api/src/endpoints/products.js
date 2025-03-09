@@ -98,6 +98,7 @@ export const updateProducts = async (req, res) => {
 }
 
 export const listProducts = async (req, res) => {
+	const { startingAfter } = req.body
 	let dbProducts
 
 	if (req.queryParams.get('stripeProductIds')) {
@@ -113,6 +114,8 @@ export const listProducts = async (req, res) => {
 	const stripeProducts = (await stripe.products.list({
 		ids: dbProducts.map(p => p.stripeProductId),
 		expand: ['data.default_price', 'data.tax_code'],
+		limit: 100,
+		starting_after: startingAfter,
 	})).data
 
 	const products = dbProducts.map(dbProd => ({
